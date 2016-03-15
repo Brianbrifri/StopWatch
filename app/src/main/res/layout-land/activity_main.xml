@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="edu.umsl.briankoehler.stopwatch.MainActivity">
+    <FrameLayout
+        android:layout_width="250dp"
+        android:layout_height="match_parent"
+        android:layout_alignParentBottom="true"
+        android:background="@color/mainViewBackground"
+        android:id="@+id/lap_view">
+    </FrameLayout>
+    <FrameLayout
+        android:layout_width="200dp"
+        android:layout_height="match_parent"
+        android:id="@+id/timer_view"
+        android:layout_marginLeft="250dp"
+        android:layout_alignParentTop="true">
+    </FrameLayout>
+
+    <FrameLayout
+        android:layout_width="50dp"
+        android:layout_height="match_parent"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:background="@color/mainViewBackground"
+        android:id="@+id/button_view"
+        android:layout_marginLeft="450dp"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true">
+
+        <Button
+            android:layout_width="80sp"
+            android:layout_height="80sp"
+            android:layout_gravity="center_horizontal"
+            android:id="@+id/start_button"
+            android:layout_marginTop="45dp"
+            android:background="@drawable/start_button_drawable"
+            android:text="@string/start"
+            android:textAlignment="center"
+            android:textColor="@color/green"
+            android:gravity="left|center"/>
+        <Button
+            android:layout_width="80sp"
+            android:layout_height="80sp"
+            android:layout_gravity="center_horizontal"
+            android:id="@+id/lap_button"
+            android:layout_marginTop="180dp"
+            android:background="@drawable/lap_button_drawable"
+            android:text="@string/lap"
+            android:textAlignment="center"
+            android:textColor="@color/lapGrey"
+            android:gravity="center|right"/>
+    </FrameLayout>
+
+
+</RelativeLayout>
