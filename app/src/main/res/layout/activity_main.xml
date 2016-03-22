@@ -43,6 +43,7 @@
             android:layout_marginLeft="230dp"
             android:background="@drawable/lap_button_drawable"
             android:text="@string/lap"
+            android:onClick="lapResetButtonClicked"
             android:textAlignment="center"
             android:textColor="@color/lapGrey"
             android:gravity="center|right"/>

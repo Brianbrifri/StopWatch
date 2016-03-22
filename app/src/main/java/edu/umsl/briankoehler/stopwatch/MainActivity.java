@@ -7,7 +7,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements MainControllerFragment.MainControllerFragmentListener{
 
     private LapsListingViewFragment mLapsListingViewFragment;
     private TimerViewFragment mTimerViewFragment;
@@ -15,6 +15,9 @@ public class MainActivity extends AppCompatActivity {
     private static final String SECONDARY_TAG = "SECONDARY_FRAGMENT";
     private Button mStartStopButton;
     private Button mLapResetButton;
+    private final int isStopped = 0;
+    private final int isRunning = 1;
+    private final int isPaused = 2;
 
 
     @Override
@@ -49,15 +52,66 @@ public class MainActivity extends AppCompatActivity {
                     .commit();
         }
 
-        mLapResetButton.setEnabled(false);
+
+
+        switch (mMainControllerFragment.getStateOfApp()) {
+            case isStopped:
+                mLapResetButton.setEnabled(false);
+                break;
+            case isRunning:
+                mLapResetButton.setEnabled(true);
+                mLapResetButton.setText(R.string.lap);
+                break;
+            case isPaused:
+                mLapResetButton.setEnabled(true);
+                mLapResetButton.setText(R.string.reset);
+
+        }
 
     }
 
     public void startStopButtonClicked(View v) {
-        mLapResetButton.setEnabled(true);
-        mStartStopButton.setText(R.string.stop);
-        mStartStopButton.setTextColor(getResources().getColor(R.color.red));
+        switch (mMainControllerFragment.getStateOfApp()) {
+            case isStopped:
+                mLapResetButton.setEnabled(true);
+                mMainControllerFragment.startTimers();
+                mStartStopButton.setText(R.string.stop);
+                mStartStopButton.setTextColor(getResources().getColor(R.color.red));
+                break;
+            case isPaused:
+                mMainControllerFragment.startTimers();
+                mStartStopButton.setText(R.string.stop);
+                mStartStopButton.setTextColor(getResources().getColor(R.color.red));
+                mLapResetButton.setText(R.string.lap);
+                break;
+            case isRunning:
+                mMainControllerFragment.pauseAllTimers();
+                mLapResetButton.setText(R.string.reset);
+                mStartStopButton.setText(R.string.start);
+                mStartStopButton.setTextColor(getResources().getColor(R.color.green));
+                break;
+            default:
+                break;
+        }
     }
 
+    public void lapResetButtonClicked(View v) {
+        switch (mMainControllerFragment.getStateOfApp()) {
+            case isPaused:
+                mMainControllerFragment.resetTimers();
+                mLapResetButton.setEnabled(false);
+                mLapResetButton.setText(R.string.lap);
+                break;
+            case isRunning:
+                mMainControllerFragment.createNewLap();
+                break;
+            default:
+                break;
+        }
+    }
 
+    @Override
+    public void listenerMethod(float time, float lapTime) {
+        mTimerViewFragment.updateUI(time, lapTime);
+    }
 }

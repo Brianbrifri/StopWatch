@@ -1,6 +1,5 @@
 package edu.umsl.briankoehler.stopwatch;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,9 +21,9 @@ public class StopWatchModel {
         mLaps.clear();
     }
 
-    public void addNewLap(String currentTime) {
+    public void addNewLap(String currentLapTime) {
         mLapNumber++;
-        Lap lap = new Lap(currentTime, mLapNumber);
+        Lap lap = new Lap(currentLapTime, mLapNumber);
         mLaps.add(0, lap);
     }
 
