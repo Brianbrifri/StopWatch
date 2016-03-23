@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -46,6 +47,7 @@ public class LapsListingViewFragment extends android.support.v4.app.Fragment  {
     private void notifyNewLap() {
         mLapAdapter.notifyItemInserted(0);
         mLapsRecyclerView.smoothScrollToPosition(0);
+        mLapAdapter.notifyDataSetChanged();
     }
 
     private class LapHolder extends RecyclerView.ViewHolder {
@@ -60,7 +62,8 @@ public class LapsListingViewFragment extends android.support.v4.app.Fragment  {
         }
 
         public void bindLap(Lap lap) {
-            mNumberOfLapTextView.setText(R.string.lap + " " + lap.getLapNumber());
+            String lapName = getString(R.string.lap);
+            mNumberOfLapTextView.setText(lapName + " " + lap.getLapNumber());
             mTimeOfLapTextView.setText(lap.getLapTime());
         }
     }
@@ -89,6 +92,7 @@ public class LapsListingViewFragment extends android.support.v4.app.Fragment  {
 
         @Override
         public int getItemCount() {
+            Log.d("TAG", "Size " + mLaps.size());
             return mLaps.size();
         }
     }

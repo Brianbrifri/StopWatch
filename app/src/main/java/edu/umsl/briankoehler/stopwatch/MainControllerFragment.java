@@ -39,7 +39,7 @@ public class MainControllerFragment extends Fragment {
         }
 
         mListener.listenerMethod(formatTimeToString(zero), formatTimeToString(zero));
-        mStopWatchModel = new StopWatchModel(getActivity());
+        mStopWatchModel = StopWatchModel.get(getActivity());
         stateOfApp = isStopped;
     }
 

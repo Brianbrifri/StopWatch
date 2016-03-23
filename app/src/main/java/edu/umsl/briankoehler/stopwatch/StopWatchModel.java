@@ -22,7 +22,7 @@ public class StopWatchModel {
         return sStopWatchModel;
     }
 
-    public StopWatchModel(Context context) {
+    private StopWatchModel(Context context) {
         createResetList();
     }
 
