@@ -18,7 +18,7 @@ public class MainControllerFragment extends Fragment {
     private final int isRunning = 1;
     private final int isPaused = 2;
     private final float zero = 0;
-    private long elapsedTime, startTime;
+    private long elapsedMainTime, elapsedLapTime, startMainTime, startLapTime;
     private int stateOfApp;
     private String mCurrentLapTime;
     private String minutes, seconds, milliseconds;
@@ -45,12 +45,14 @@ public class MainControllerFragment extends Fragment {
 
     public void startTimers() {
         if(getStateOfApp() == isPaused) {
-            startTime = System.currentTimeMillis() - elapsedTime;
-            Log.d("TAG", "Started while start time is " + formatTimeToString(startTime) + " and state of app is " + getStateOfApp());
+            startMainTime = System.currentTimeMillis() - elapsedMainTime;
+            startLapTime = System.currentTimeMillis() - elapsedLapTime;
+            Log.d("TAG", "Started while start time is " + formatTimeToString(startMainTime) + " and state of app is " + getStateOfApp());
         }
         else {
-            startTime = System.currentTimeMillis();
-            Log.d("TAG", "Started while start time is " + formatTimeToString(startTime) + " and state of app is " + getStateOfApp());
+            startMainTime = System.currentTimeMillis();
+            startLapTime = System.currentTimeMillis();
+            Log.d("TAG", "Started while start time is " + formatTimeToString(startMainTime) + " and state of app is " + getStateOfApp());
         }
         startSequence();
     }
@@ -62,7 +64,8 @@ public class MainControllerFragment extends Fragment {
     }
 
     public void createNewLap() {
-        mStopWatchModel.addNewLap(formatTimeToString(elapsedTime));
+        mStopWatchModel.addNewLap(formatTimeToString(elapsedLapTime));
+        startLapTime = System.currentTimeMillis();
     }
 
     public void resetTimers() {
@@ -133,8 +136,9 @@ public class MainControllerFragment extends Fragment {
         @Override
         public void run() {
             if(mListener != null) {
-                elapsedTime = System.currentTimeMillis() - startTime;
-                mListener.listenerMethod(formatTimeToString(elapsedTime), formatTimeToString(elapsedTime));
+                elapsedMainTime = System.currentTimeMillis() - startMainTime;
+                elapsedLapTime = System.currentTimeMillis() - startLapTime;
+                mListener.listenerMethod(formatTimeToString(elapsedMainTime), formatTimeToString(elapsedLapTime));
                 mHandler.postDelayed(mRunnable, 10);
             }
         }

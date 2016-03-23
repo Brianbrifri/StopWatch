@@ -36,7 +36,7 @@ public class StopWatchModel {
         mLapNumber++;
         Lap lap = new Lap(currentLapTime, mLapNumber);
         mLaps.add(0, lap);
-        Log.d("TAG", "New lap created with Lap# " + mLapNumber + " at time: " + currentLapTime);
+        Log.d("TAG", "Lap# " + mLaps.get(0).getLapNumber() + " created at time: " + mLaps.get(0).getLapTime());
     }
 
     public List<Lap> getLaps() {

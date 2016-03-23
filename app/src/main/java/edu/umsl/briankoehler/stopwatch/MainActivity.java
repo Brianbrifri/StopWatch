@@ -116,7 +116,7 @@ public class MainActivity extends AppCompatActivity implements MainControllerFra
                 break;
             case isRunning:
                 mMainControllerFragment.createNewLap();
-                mLapsListingViewFragment.notifyNewLap();
+                mLapsListingViewFragment.updateUI();
                 break;
             default:
                 break;

@@ -34,7 +34,7 @@ public class LapsListingViewFragment extends android.support.v4.app.Fragment  {
         return view;
     }
 
-    private void updateUI() {
+    public void updateUI() {
         StopWatchModel stopWatchModel = StopWatchModel.get(getActivity());
         List<Lap> laps = stopWatchModel.getLaps();
         mLapAdapter = new LapAdapter(laps);
@@ -43,7 +43,7 @@ public class LapsListingViewFragment extends android.support.v4.app.Fragment  {
         notifyNewLap();
     }
 
-    public void notifyNewLap() {
+    private void notifyNewLap() {
         mLapAdapter.notifyItemInserted(0);
         mLapsRecyclerView.smoothScrollToPosition(0);
     }
