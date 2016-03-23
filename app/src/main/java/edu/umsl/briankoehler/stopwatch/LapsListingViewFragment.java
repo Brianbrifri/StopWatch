@@ -31,23 +31,26 @@ public class LapsListingViewFragment extends android.support.v4.app.Fragment  {
         View view = inflater.inflate(R.layout.lap_listing_fragment_recycler_view, container, false);
         mLapsRecyclerView = (RecyclerView) view.findViewById(R.id.lap_listing_recycler_view);
         mLapsRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        updateUI();
+        mLapsRecyclerView.addItemDecoration(new HorizontalDividerItemDecoration.Builder(getActivity()).build());
+        updateUI(0);
         return view;
     }
 
-    public void updateUI() {
+    public void updateUI(int flag) {
         StopWatchModel stopWatchModel = StopWatchModel.get(getActivity());
         List<Lap> laps = stopWatchModel.getLaps();
         mLapAdapter = new LapAdapter(laps);
         mLapsRecyclerView.setAdapter(mLapAdapter);
-        mLapsRecyclerView.addItemDecoration(new HorizontalDividerItemDecoration.Builder(getActivity()).build());
-        notifyNewLap();
+        notifyNewLap(flag);
     }
 
-    private void notifyNewLap() {
-        mLapAdapter.notifyItemInserted(0);
-        mLapsRecyclerView.smoothScrollToPosition(0);
-        mLapAdapter.notifyDataSetChanged();
+    private void notifyNewLap(int flag) {
+        if(flag > 0) {
+            mLapAdapter.notifyItemInserted(0);
+            mLapsRecyclerView.scrollToPosition(0);
+        }
+        else
+            mLapAdapter.notifyDataSetChanged();
     }
 
     private class LapHolder extends RecyclerView.ViewHolder {
@@ -62,8 +65,8 @@ public class LapsListingViewFragment extends android.support.v4.app.Fragment  {
         }
 
         public void bindLap(Lap lap) {
-            String lapName = getString(R.string.lap);
-            mNumberOfLapTextView.setText(lapName + " " + lap.getLapNumber());
+            String lapName = getString(R.string.lap) + " " + lap.getLapNumber();
+            mNumberOfLapTextView.setText(lapName);
             mTimeOfLapTextView.setText(lap.getLapTime());
         }
     }
@@ -92,7 +95,6 @@ public class LapsListingViewFragment extends android.support.v4.app.Fragment  {
 
         @Override
         public int getItemCount() {
-            Log.d("TAG", "Size " + mLaps.size());
             return mLaps.size();
         }
     }

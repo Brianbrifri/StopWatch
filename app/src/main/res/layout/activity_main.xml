@@ -40,7 +40,7 @@
             android:layout_height="80sp"
             android:layout_gravity="center_vertical"
             android:id="@+id/lap_button"
-            android:layout_marginLeft="267dp"
+            android:layout_marginLeft="247dp"
             android:background="@drawable/lap_button_drawable"
             android:text="@string/lap"
             android:onClick="lapResetButtonClicked"

@@ -15,6 +15,8 @@ public class TimerViewFragment extends Fragment {
 
     private TextView mMainTimerTextView;
     private TextView mLapTimerTextView;
+    public String mMainTimer;
+    public String mLapTimer;
 
     @Nullable
     @Override
@@ -29,5 +31,15 @@ public class TimerViewFragment extends Fragment {
     public void updateTextView(String mainTimer, String lapTimer) {
         mMainTimerTextView.setText(mainTimer);
         mLapTimerTextView.setText(lapTimer);
+        mMainTimer = mainTimer;
+        mLapTimer = lapTimer;
+    }
+
+    public String getMainTimer() {
+        return mMainTimer;
+    }
+
+    public String getLapTimer() {
+        return mLapTimer;
     }
 }
