@@ -1,5 +1,8 @@
 package edu.umsl.briankoehler.stopwatch;
 
+import android.content.Context;
+import android.util.Log;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,9 +12,17 @@ import java.util.List;
 public class StopWatchModel {
 
     private List<Lap> mLaps;
+    private static StopWatchModel sStopWatchModel;
     int mLapNumber;
 
-    public StopWatchModel() {
+    public static StopWatchModel get(Context context) {
+        if(sStopWatchModel == null) {
+            sStopWatchModel = new StopWatchModel(context);
+        }
+        return sStopWatchModel;
+    }
+
+    public StopWatchModel(Context context) {
         createResetList();
     }
 
@@ -25,6 +36,7 @@ public class StopWatchModel {
         mLapNumber++;
         Lap lap = new Lap(currentLapTime, mLapNumber);
         mLaps.add(0, lap);
+        Log.d("TAG", "New lap created with Lap# " + mLapNumber + " at time: " + currentLapTime);
     }
 
     public List<Lap> getLaps() {

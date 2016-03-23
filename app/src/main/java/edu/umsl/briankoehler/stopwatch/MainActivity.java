@@ -1,13 +1,13 @@
 package edu.umsl.briankoehler.stopwatch;
 
-import android.app.FragmentManager;
-import android.support.v4.app.FragmentActivity;
+import android.annotation.TargetApi;
+import android.os.Build;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
-public class MainActivity extends AppCompatActivity implements MainControllerFragment.MainControllerFragmentListener{
+public class MainActivity extends AppCompatActivity implements MainControllerFragment.MainControllerFragmentListener, LapsListingViewFragment.LapListingViewFragmentListener{
 
     private LapsListingViewFragment mLapsListingViewFragment;
     private TimerViewFragment mTimerViewFragment;
@@ -52,43 +52,55 @@ public class MainActivity extends AppCompatActivity implements MainControllerFra
                     .commit();
         }
 
+        initialButtonStates(mMainControllerFragment.getStateOfApp());
 
+    }
 
-        switch (mMainControllerFragment.getStateOfApp()) {
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    private void initialButtonStates(int state) {
+       switch (state) {
             case isStopped:
                 mLapResetButton.setEnabled(false);
                 break;
             case isRunning:
+                mStartStopButton.setText(R.string.stop);
+                mStartStopButton.setTextColor(getResources().getColor(R.color.red));
+                mStartStopButton.setBackground(getDrawable(R.drawable.start_button_drawable_running));
                 mLapResetButton.setEnabled(true);
-                mLapResetButton.setText(R.string.lap);
                 break;
             case isPaused:
                 mLapResetButton.setEnabled(true);
                 mLapResetButton.setText(R.string.reset);
+                break;
+            default:
+                break;
 
         }
-
     }
 
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     public void startStopButtonClicked(View v) {
         switch (mMainControllerFragment.getStateOfApp()) {
             case isStopped:
+                mStartStopButton.setText(R.string.stop);
+                mStartStopButton.setTextColor(getResources().getColor(R.color.red));
+                mStartStopButton.setBackground(getDrawable(R.drawable.start_button_drawable_running));
                 mLapResetButton.setEnabled(true);
                 mMainControllerFragment.startTimers();
-                mStartStopButton.setText(R.string.stop);
-                mStartStopButton.setTextColor(getResources().getColor(R.color.red));
                 break;
             case isPaused:
-                mMainControllerFragment.startTimers();
                 mStartStopButton.setText(R.string.stop);
                 mStartStopButton.setTextColor(getResources().getColor(R.color.red));
+                mStartStopButton.setBackground(getDrawable(R.drawable.start_button_drawable_running));
                 mLapResetButton.setText(R.string.lap);
+                mMainControllerFragment.startTimers();
                 break;
             case isRunning:
-                mMainControllerFragment.pauseAllTimers();
                 mLapResetButton.setText(R.string.reset);
                 mStartStopButton.setText(R.string.start);
+                mStartStopButton.setBackground(getDrawable(R.drawable.start_button_drawable));
                 mStartStopButton.setTextColor(getResources().getColor(R.color.green));
+                mMainControllerFragment.pauseAllTimers();
                 break;
             default:
                 break;
@@ -104,6 +116,7 @@ public class MainActivity extends AppCompatActivity implements MainControllerFra
                 break;
             case isRunning:
                 mMainControllerFragment.createNewLap();
+                mLapsListingViewFragment.notifyNewLap();
                 break;
             default:
                 break;
@@ -111,7 +124,12 @@ public class MainActivity extends AppCompatActivity implements MainControllerFra
     }
 
     @Override
-    public void listenerMethod(float time, float lapTime) {
-        mTimerViewFragment.updateUI(time, lapTime);
+    public void listenerMethod(String time, String lapTime) {
+        mTimerViewFragment.updateTextView(time, lapTime);
+    }
+
+    @Override
+    public void lapListenerMethod() {
+
     }
 }

@@ -21,11 +21,11 @@ public class MainControllerFragment extends Fragment {
     private long elapsedTime, startTime;
     private int stateOfApp;
     private String mCurrentLapTime;
-    private String mStartTime;
-    private String mCurrentTime;
+    private String minutes, seconds, milliseconds;
+    private long secs, mins;
 
     interface MainControllerFragmentListener {
-        void listenerMethod(float time, float lapTime);
+        void listenerMethod(String time, String lapTime);
     }
 
     @Override
@@ -38,18 +38,19 @@ public class MainControllerFragment extends Fragment {
             Log.d("TAG", "Activity is a listener");
         }
 
-        mListener.listenerMethod(zero, zero);
-        mStopWatchModel = new StopWatchModel();
+        mListener.listenerMethod(formatTimeToString(zero), formatTimeToString(zero));
+        mStopWatchModel = new StopWatchModel(getActivity());
         stateOfApp = isStopped;
     }
 
     public void startTimers() {
-        stateOfApp = isRunning;
-        if(stateOfApp == isPaused) {
+        if(getStateOfApp() == isPaused) {
             startTime = System.currentTimeMillis() - elapsedTime;
+            Log.d("TAG", "Started while start time is " + formatTimeToString(startTime) + " and state of app is " + getStateOfApp());
         }
         else {
             startTime = System.currentTimeMillis();
+            Log.d("TAG", "Started while start time is " + formatTimeToString(startTime) + " and state of app is " + getStateOfApp());
         }
         startSequence();
     }
@@ -61,25 +62,71 @@ public class MainControllerFragment extends Fragment {
     }
 
     public void createNewLap() {
-        mStopWatchModel.addNewLap(mCurrentLapTime);
+        mStopWatchModel.addNewLap(formatTimeToString(elapsedTime));
     }
 
     public void resetTimers() {
         mStopWatchModel.createResetList();
         stateOfApp = isStopped;
-        mListener.listenerMethod(zero, zero);
+        mHandler.removeCallbacks(mRunnable);
+        mHandler = null;
+        mListener.listenerMethod(formatTimeToString(zero), formatTimeToString(zero));
     }
 
     public int getStateOfApp() {
         return stateOfApp;
     }
 
+    public String formatTimeToString(float timeBeingFormatted) {
+        secs = (long) (timeBeingFormatted/1000);
+        mins = (long) ((timeBeingFormatted/1000) / 60);
+
+
+        //Minutes to string
+        mins = mins % 60;
+        minutes = String.valueOf(mins);
+        if(mins == 0) {
+            minutes = "00";
+        }
+
+        if(mins < 10 && mins > 0) {
+            minutes = "0" + minutes;
+        }
+
+        //Seconds to string
+        secs = secs % 60;
+        seconds = String.valueOf(secs);
+        if(secs == 0) {
+            seconds = "00";
+        }
+
+        if(secs < 10 && secs > 0) {
+            seconds = "0" + seconds;
+        }
+
+        //Milliseconds to string
+        milliseconds = String.valueOf((long) timeBeingFormatted);
+        if(milliseconds.length() == 2) {
+            milliseconds = "0" + milliseconds;
+        }
+
+        if(milliseconds.length() <= 1) {
+            milliseconds = "00";
+        }
+
+        if(milliseconds.length() >= 3) {
+            milliseconds = milliseconds.substring(milliseconds.length() - 3, milliseconds.length());
+        }
+
+        return minutes + ":" + seconds + "." + milliseconds;
+    }
+
     public void startSequence() {
         if(mHandler == null) {
             mHandler = new Handler();
-            mHandler.postDelayed(mRunnable, 0);
-            stateOfApp = isRunning;
         }
+        stateOfApp = isRunning;
+        mHandler.postDelayed(mRunnable, 0);
     }
 
     private Runnable mRunnable = new Runnable() {
@@ -87,8 +134,8 @@ public class MainControllerFragment extends Fragment {
         public void run() {
             if(mListener != null) {
                 elapsedTime = System.currentTimeMillis() - startTime;
-                mListener.listenerMethod(elapsedTime, elapsedTime);
-                mHandler.postDelayed(mRunnable, 1);
+                mListener.listenerMethod(formatTimeToString(elapsedTime), formatTimeToString(elapsedTime));
+                mHandler.postDelayed(mRunnable, 10);
             }
         }
     };

@@ -7,14 +7,22 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
+
+import java.util.List;
 
 /**
  * Created by Brian Koehler on 3/10/2016.
  */
 public class LapsListingViewFragment extends android.support.v4.app.Fragment  {
     private RecyclerView mLapsRecyclerView;
+    private LapAdapter mLapAdapter;
+
+    interface LapListingViewFragmentListener {
+        void lapListenerMethod();
+    }
 
     @Nullable
     @Override
@@ -22,18 +30,48 @@ public class LapsListingViewFragment extends android.support.v4.app.Fragment  {
         View view = inflater.inflate(R.layout.lap_listing_fragment_recycler_view, container, false);
         mLapsRecyclerView = (RecyclerView) view.findViewById(R.id.lap_listing_recycler_view);
         mLapsRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        mLapsRecyclerView.setAdapter(new LapAdapter());
-        mLapsRecyclerView.addItemDecoration(new HorizontalDividerItemDecoration.Builder(getActivity()).build());
+        updateUI();
         return view;
     }
 
+    private void updateUI() {
+        StopWatchModel stopWatchModel = StopWatchModel.get(getActivity());
+        List<Lap> laps = stopWatchModel.getLaps();
+        mLapAdapter = new LapAdapter(laps);
+        mLapsRecyclerView.setAdapter(mLapAdapter);
+        mLapsRecyclerView.addItemDecoration(new HorizontalDividerItemDecoration.Builder(getActivity()).build());
+        notifyNewLap();
+    }
+
+    public void notifyNewLap() {
+        mLapAdapter.notifyItemInserted(0);
+        mLapsRecyclerView.smoothScrollToPosition(0);
+    }
+
     private class LapHolder extends RecyclerView.ViewHolder {
+
+        private TextView mNumberOfLapTextView;
+        private TextView mTimeOfLapTextView;
+
         public LapHolder(View itemView) {
             super(itemView);
+            mNumberOfLapTextView = (TextView) itemView.findViewById(R.id.number_of_lap_text_view);
+            mTimeOfLapTextView = (TextView) itemView.findViewById(R.id.time_of_lap_text_view);
+        }
+
+        public void bindLap(Lap lap) {
+            mNumberOfLapTextView.setText(R.string.lap + " " + lap.getLapNumber());
+            mTimeOfLapTextView.setText(lap.getLapTime());
         }
     }
 
     private class LapAdapter extends RecyclerView.Adapter<LapHolder> {
+
+        private List<Lap> mLaps;
+
+        public LapAdapter(List<Lap> laps) {
+            mLaps = laps;
+        }
 
         @Override
         public LapHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -44,12 +82,14 @@ public class LapsListingViewFragment extends android.support.v4.app.Fragment  {
 
         @Override
         public void onBindViewHolder(LapHolder holder, int position) {
+            Lap lap = mLaps.get(position);
+            holder.bindLap(lap);
 
         }
 
         @Override
         public int getItemCount() {
-            return 50;
+            return mLaps.size();
         }
     }
 }
