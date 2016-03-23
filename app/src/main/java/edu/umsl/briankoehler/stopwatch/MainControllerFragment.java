@@ -20,7 +20,6 @@ public class MainControllerFragment extends Fragment {
     private final float zero = 0;
     private long elapsedMainTime, elapsedLapTime, startMainTime, startLapTime;
     private int stateOfApp;
-    private String mCurrentLapTime;
     private String minutes, seconds, milliseconds;
     private long secs, mins;
 
@@ -47,14 +46,24 @@ public class MainControllerFragment extends Fragment {
         if(getStateOfApp() == isPaused) {
             startMainTime = System.currentTimeMillis() - elapsedMainTime;
             startLapTime = System.currentTimeMillis() - elapsedLapTime;
-            Log.d("TAG", "Started while start time is " + formatTimeToString(startMainTime) + " and state of app is " + getStateOfApp());
         }
         else {
             startMainTime = System.currentTimeMillis();
             startLapTime = System.currentTimeMillis();
-            Log.d("TAG", "Started while start time is " + formatTimeToString(startMainTime) + " and state of app is " + getStateOfApp());
         }
         startSequence();
+    }
+
+    public void updateTimersAfterRotate() {
+        if(getStateOfApp() == isStopped) {
+            mListener.listenerMethod(formatTimeToString(zero), formatTimeToString(zero));
+        }
+        else if(getStateOfApp() == isPaused) {
+            mListener.listenerMethod(formatTimeToString(elapsedMainTime), formatTimeToString(elapsedLapTime));
+        }
+        else {
+
+        }
     }
 
     public void pauseAllTimers() {

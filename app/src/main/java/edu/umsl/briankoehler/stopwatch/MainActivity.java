@@ -4,20 +4,15 @@ import android.annotation.TargetApi;
 import android.os.Build;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
-public class MainActivity extends AppCompatActivity implements MainControllerFragment.MainControllerFragmentListener, LapsListingViewFragment.LapListingViewFragmentListener{
+public class MainActivity extends AppCompatActivity implements MainControllerFragment.MainControllerFragmentListener {
 
     private LapsListingViewFragment mLapsListingViewFragment;
     private TimerViewFragment mTimerViewFragment;
     private MainControllerFragment mMainControllerFragment;
     private static final String SECONDARY_TAG = "SECONDARY_FRAGMENT";
-    private static final String MAIN_TIMER_TIME = "MAIN_TIMER";
-    private static final String LAP_TIMER_TIME = "LAP_TIMER";
-    private String mMainTimerTime;
-    private String mLapTimerTime;
     private Button mStartStopButton;
     private Button mLapResetButton;
     private final int isStopped = 0;
@@ -62,8 +57,16 @@ public class MainActivity extends AppCompatActivity implements MainControllerFra
 
     }
 
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+    }
 
-
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        mMainControllerFragment.updateTimersAfterRotate();
+    }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     private void initialButtonStates(int state) {
@@ -80,6 +83,8 @@ public class MainActivity extends AppCompatActivity implements MainControllerFra
             case isPaused:
                 mLapResetButton.setEnabled(true);
                 mLapResetButton.setText(R.string.reset);
+                mLapResetButton.setTextColor(getResources().getColor(R.color.black));
+                mLapResetButton.setBackground(getDrawable(R.drawable.lap_button_drawable_paused));
                 break;
             default:
                 break;
@@ -106,6 +111,8 @@ public class MainActivity extends AppCompatActivity implements MainControllerFra
                 break;
             case isRunning:
                 mLapResetButton.setText(R.string.reset);
+                mLapResetButton.setTextColor(getResources().getColor(R.color.black));
+                mLapResetButton.setBackground(getDrawable(R.drawable.lap_button_drawable_paused));
                 mStartStopButton.setText(R.string.start);
                 mStartStopButton.setBackground(getDrawable(R.drawable.start_button_drawable));
                 mStartStopButton.setTextColor(getResources().getColor(R.color.green));
@@ -116,12 +123,15 @@ public class MainActivity extends AppCompatActivity implements MainControllerFra
         }
     }
 
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     public void lapResetButtonClicked(View v) {
         switch (mMainControllerFragment.getStateOfApp()) {
             case isPaused:
                 mMainControllerFragment.resetTimers();
                 mLapResetButton.setEnabled(false);
                 mLapResetButton.setText(R.string.lap);
+                mLapResetButton.setTextColor(getResources().getColor(R.color.lapGrey));
+                mLapResetButton.setBackground(getDrawable(R.drawable.lap_button_drawable));
                 mLapsListingViewFragment.updateUI(0);
                 break;
             case isRunning:
@@ -136,12 +146,7 @@ public class MainActivity extends AppCompatActivity implements MainControllerFra
     @Override
     public void listenerMethod(String time, String lapTime) {
         mTimerViewFragment.updateTextView(time, lapTime);
-        mMainTimerTime = time;
-        mLapTimerTime = lapTime;
     }
 
-    @Override
-    public void lapListenerMethod() {
 
-    }
 }

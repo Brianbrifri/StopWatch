@@ -34,12 +34,4 @@ public class TimerViewFragment extends Fragment {
         mMainTimer = mainTimer;
         mLapTimer = lapTimer;
     }
-
-    public String getMainTimer() {
-        return mMainTimer;
-    }
-
-    public String getLapTimer() {
-        return mLapTimer;
-    }
 }
