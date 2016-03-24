@@ -59,10 +59,7 @@ public class MainActivity extends AppCompatActivity implements MainControllerFra
 
     }
 
-    @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-    }
+
 
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
