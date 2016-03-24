@@ -2,6 +2,7 @@ package edu.umsl.briankoehler.stopwatch;
 
 import android.annotation.TargetApi;
 import android.os.Build;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -54,6 +55,7 @@ public class MainActivity extends AppCompatActivity implements MainControllerFra
         }
 
         initialButtonStates(mMainControllerFragment.getStateOfApp());
+        mMainControllerFragment.setListener(this);
 
     }
 
@@ -76,14 +78,14 @@ public class MainActivity extends AppCompatActivity implements MainControllerFra
                 break;
             case isRunning:
                 mStartStopButton.setText(R.string.stop);
-                mStartStopButton.setTextColor(getResources().getColor(R.color.red));
+                mStartStopButton.setTextColor(ContextCompat.getColor(this, R.color.red));
                 mStartStopButton.setBackground(getDrawable(R.drawable.start_button_drawable_running));
                 mLapResetButton.setEnabled(true);
                 break;
             case isPaused:
                 mLapResetButton.setEnabled(true);
                 mLapResetButton.setText(R.string.reset);
-                mLapResetButton.setTextColor(getResources().getColor(R.color.black));
+                mLapResetButton.setTextColor(ContextCompat.getColor(this, R.color.black));
                 mLapResetButton.setBackground(getDrawable(R.drawable.lap_button_drawable_paused));
                 break;
             default:
@@ -97,25 +99,27 @@ public class MainActivity extends AppCompatActivity implements MainControllerFra
         switch (mMainControllerFragment.getStateOfApp()) {
             case isStopped:
                 mStartStopButton.setText(R.string.stop);
-                mStartStopButton.setTextColor(getResources().getColor(R.color.red));
+                mStartStopButton.setTextColor(ContextCompat.getColor(this, R.color.red));
                 mStartStopButton.setBackground(getDrawable(R.drawable.start_button_drawable_running));
                 mLapResetButton.setEnabled(true);
                 mMainControllerFragment.startTimers();
                 break;
             case isPaused:
                 mStartStopButton.setText(R.string.stop);
-                mStartStopButton.setTextColor(getResources().getColor(R.color.red));
+                mStartStopButton.setTextColor(ContextCompat.getColor(this, R.color.red));
                 mStartStopButton.setBackground(getDrawable(R.drawable.start_button_drawable_running));
-                mLapResetButton.setText(R.string.lap);
+                mLapResetButton.setTextColor(ContextCompat.getColor(this, R.color.lapGrey));
+                mLapResetButton.setBackground(getDrawable(R.drawable.lap_button_drawable));mLapResetButton.setText(R.string.lap);
                 mMainControllerFragment.startTimers();
                 break;
             case isRunning:
                 mLapResetButton.setText(R.string.reset);
-                mLapResetButton.setTextColor(getResources().getColor(R.color.black));
+                mLapResetButton.setTextColor(ContextCompat.getColor(this, R.color.black));
                 mLapResetButton.setBackground(getDrawable(R.drawable.lap_button_drawable_paused));
+                mStartStopButton.setBackground(getDrawable(R.drawable.start_button_drawable_running));
                 mStartStopButton.setText(R.string.start);
                 mStartStopButton.setBackground(getDrawable(R.drawable.start_button_drawable));
-                mStartStopButton.setTextColor(getResources().getColor(R.color.green));
+                mStartStopButton.setTextColor(ContextCompat.getColor(this, R.color.green));
                 mMainControllerFragment.pauseAllTimers();
                 break;
             default:
@@ -130,7 +134,7 @@ public class MainActivity extends AppCompatActivity implements MainControllerFra
                 mMainControllerFragment.resetTimers();
                 mLapResetButton.setEnabled(false);
                 mLapResetButton.setText(R.string.lap);
-                mLapResetButton.setTextColor(getResources().getColor(R.color.lapGrey));
+                mLapResetButton.setTextColor(ContextCompat.getColor(this, R.color.lapGrey));
                 mLapResetButton.setBackground(getDrawable(R.drawable.lap_button_drawable));
                 mLapsListingViewFragment.updateUI(0);
                 break;

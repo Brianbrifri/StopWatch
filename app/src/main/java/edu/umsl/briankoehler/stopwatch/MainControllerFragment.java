@@ -27,6 +27,10 @@ public class MainControllerFragment extends Fragment {
         void listenerMethod(String time, String lapTime);
     }
 
+    public void setListener(MainControllerFragmentListener listener) {
+        mListener = listener;
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
