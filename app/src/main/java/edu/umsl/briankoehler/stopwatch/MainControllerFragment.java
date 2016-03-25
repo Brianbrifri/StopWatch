@@ -23,14 +23,18 @@ public class MainControllerFragment extends Fragment {
     private String minutes, seconds, milliseconds;
     private long secs, mins;
 
+    //Interface for listener method in mainActivity so that the runnable can call that method
     interface MainControllerFragmentListener {
         void listenerMethod(String time, String lapTime);
     }
 
+    //Sets listener wherever this is called
     public void setListener(MainControllerFragmentListener listener) {
         mListener = listener;
     }
 
+    //Instance is retained (because it's a headless fragment) and a listener is created, and the
+    //model is gotten
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,6 +50,7 @@ public class MainControllerFragment extends Fragment {
         stateOfApp = isStopped;
     }
 
+    //Starts timers with system current time or system current time - elapsed time if app was paused
     public void startTimers() {
         if(getStateOfApp() == isPaused) {
             startMainTime = System.currentTimeMillis() - elapsedMainTime;
@@ -58,6 +63,8 @@ public class MainControllerFragment extends Fragment {
         startSequence();
     }
 
+    //Function calls the listener method only if the app is not currently running based on the
+    //state of the app
     public void updateTimersAfterRotate() {
         if(getStateOfApp() == isStopped) {
             mListener.listenerMethod(formatTimeToString(zero), formatTimeToString(zero));
@@ -70,17 +77,20 @@ public class MainControllerFragment extends Fragment {
         }
     }
 
+    //Removes callbacks to pause the runnable but does not set the handler to null
     public void pauseAllTimers() {
         stateOfApp = isPaused;
         mHandler.removeCallbacks(mRunnable);
 
     }
 
+    //Calls the model's createNewLap function and resets the lap timer start time to current time
     public void createNewLap() {
         mStopWatchModel.addNewLap(formatTimeToString(elapsedLapTime));
         startLapTime = System.currentTimeMillis();
     }
 
+    //Resets the array, removes callbacks and sets handler to null and resets timer to zero
     public void resetTimers() {
         mStopWatchModel.createResetList();
         stateOfApp = isStopped;
@@ -89,10 +99,12 @@ public class MainControllerFragment extends Fragment {
         mListener.listenerMethod(formatTimeToString(zero), formatTimeToString(zero));
     }
 
+    //Returns state of app for use by other functions
     public int getStateOfApp() {
         return stateOfApp;
     }
 
+    //Formats the long int to a string to be displayed as a timer
     public String formatTimeToString(float timeBeingFormatted) {
         secs = (long) (timeBeingFormatted/1000);
         mins = (long) ((timeBeingFormatted/1000) / 60);
@@ -137,6 +149,7 @@ public class MainControllerFragment extends Fragment {
         return minutes + ":" + seconds + "." + milliseconds;
     }
 
+    //Starts the sequence by creating a handler and calling postdelayed immediately
     public void startSequence() {
         if(mHandler == null) {
             mHandler = new Handler();
@@ -145,6 +158,8 @@ public class MainControllerFragment extends Fragment {
         mHandler.postDelayed(mRunnable, 0);
     }
 
+    //The runnable calls the listener method and constantly updates the elapsed time to send to
+    //the formatTime function
     private Runnable mRunnable = new Runnable() {
         @Override
         public void run() {

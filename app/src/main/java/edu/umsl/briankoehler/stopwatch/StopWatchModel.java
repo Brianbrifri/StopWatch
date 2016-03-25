@@ -11,6 +11,7 @@ import java.util.List;
  */
 public class StopWatchModel {
 
+    //Creates a singleton of the model. The model is an arraylist of object Lap
     private List<Lap> mLaps;
     private static StopWatchModel sStopWatchModel;
     int mLapNumber;
@@ -32,6 +33,7 @@ public class StopWatchModel {
         mLaps.clear();
     }
 
+    //Increments the lap number then adds a new lap
     public void addNewLap(String currentLapTime) {
         mLapNumber++;
         Lap lap = new Lap(currentLapTime, mLapNumber);
@@ -39,6 +41,7 @@ public class StopWatchModel {
         Log.d("TAG", "Lap# " + mLaps.get(0).getLapNumber() + " created at time: " + mLaps.get(0).getLapTime());
     }
 
+    //Returns the list of the laps
     public List<Lap> getLaps() {
         return mLaps;
     }

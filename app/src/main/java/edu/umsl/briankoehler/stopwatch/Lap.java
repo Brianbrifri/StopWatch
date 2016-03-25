@@ -5,6 +5,7 @@ package edu.umsl.briankoehler.stopwatch;
  */
 public class Lap {
 
+    //These are stored in an array in the model. Has properties lapTime and lapNumber
     final String mLapTime;
     final int mLapNumber;
 

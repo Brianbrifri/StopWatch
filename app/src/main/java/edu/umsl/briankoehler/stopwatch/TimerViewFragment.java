@@ -25,6 +25,7 @@ public class TimerViewFragment extends Fragment {
         return view;
     }
 
+    //Function updates the text view for the timers with a string
     public void updateTextView(String mainTimer, String lapTimer) {
         mMainTimerTextView.setText(mainTimer);
         mLapTimerTextView.setText(lapTimer);

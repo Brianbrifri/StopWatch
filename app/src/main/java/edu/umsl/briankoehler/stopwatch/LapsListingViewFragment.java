@@ -21,6 +21,7 @@ public class LapsListingViewFragment extends android.support.v4.app.Fragment  {
     private LapAdapter mLapAdapter;
 
 
+    //Inflates the view with the related xml, creates a recycler view and updates UI
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -32,6 +33,8 @@ public class LapsListingViewFragment extends android.support.v4.app.Fragment  {
         return view;
     }
 
+    //This is called whenever a new lap is created so as to update the recycler view with the new lap
+    //The flag is for if this funciton is called while runnning or stopped
     public void updateUI(int flag) {
         StopWatchModel stopWatchModel = StopWatchModel.get(getActivity());
         List<Lap> laps = stopWatchModel.getLaps();
@@ -40,6 +43,9 @@ public class LapsListingViewFragment extends android.support.v4.app.Fragment  {
         notifyNewLap(flag);
     }
 
+    //Notifies that an item is inserted at position 0 in the array then scrolls the view to
+    //that location. Calls notifyDataSetChange if the view is being reset because
+    //notifyItemInserted will be out of bounds at 0 if there is an emtpy array
     private void notifyNewLap(int flag) {
         if(flag > 0) {
             mLapAdapter.notifyItemInserted(0);
@@ -54,12 +60,14 @@ public class LapsListingViewFragment extends android.support.v4.app.Fragment  {
         private TextView mNumberOfLapTextView;
         private TextView mTimeOfLapTextView;
 
+        //This lapHolder holds the text views for the laps (time and lap number)
         public LapHolder(View itemView) {
             super(itemView);
             mNumberOfLapTextView = (TextView) itemView.findViewById(R.id.number_of_lap_text_view);
             mTimeOfLapTextView = (TextView) itemView.findViewById(R.id.time_of_lap_text_view);
         }
 
+        //Function to add the data to each lap in the recycler view
         public void bindLap(Lap lap) {
             String lapName = getString(R.string.lap) + " " + lap.getLapNumber();
             mNumberOfLapTextView.setText(lapName);
@@ -67,6 +75,8 @@ public class LapsListingViewFragment extends android.support.v4.app.Fragment  {
         }
     }
 
+    //This LapAdapter takes the list of laps, inflates the view of each lap view,
+    //binds each lap to the recycler view as many times as there are laps
     private class LapAdapter extends RecyclerView.Adapter<LapHolder> {
 
         private List<Lap> mLaps;

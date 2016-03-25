@@ -25,11 +25,15 @@ public class MainActivity extends AppCompatActivity implements MainControllerFra
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        //Initialize Buttons
         mStartStopButton = (Button) findViewById(R.id.start_button);
         mLapResetButton = (Button) findViewById(R.id.lap_button);
 
+        //Create fragment manager with support library
         android.support.v4.app.FragmentManager manager = getSupportFragmentManager();
 
+        //Attach the 3 fragments (2 view fragments attached by id, 1 headless fragment attached by tag
         mLapsListingViewFragment = (LapsListingViewFragment) manager.findFragmentById(R.id.lap_view);
         if(mLapsListingViewFragment == null) {
             mLapsListingViewFragment = new LapsListingViewFragment();
@@ -54,19 +58,24 @@ public class MainActivity extends AppCompatActivity implements MainControllerFra
                     .commit();
         }
 
+        //Sets button colors/states after app rotated
         initialButtonStates(mMainControllerFragment.getStateOfApp());
+
+        //Sets listener for mainControllerFragment
         mMainControllerFragment.setListener(this);
 
     }
 
 
 
+    //Calls function to repopulate the timer views if screen is rotated
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
         mMainControllerFragment.updateTimersAfterRotate();
     }
 
+    //Main body of function to set button states
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     private void initialButtonStates(int state) {
        switch (state) {
@@ -91,6 +100,7 @@ public class MainActivity extends AppCompatActivity implements MainControllerFra
         }
     }
 
+    //StartStopButtonClicked starts the timers (or stops them, depending) and sets buttons to certain states
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     public void startStopButtonClicked(View v) {
         switch (mMainControllerFragment.getStateOfApp()) {
@@ -124,6 +134,7 @@ public class MainActivity extends AppCompatActivity implements MainControllerFra
         }
     }
 
+    //LapResetButtonCLicked creates laps if running and resets if stopped
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     public void lapResetButtonClicked(View v) {
         switch (mMainControllerFragment.getStateOfApp()) {
@@ -144,6 +155,8 @@ public class MainActivity extends AppCompatActivity implements MainControllerFra
         }
     }
 
+    //ListenerMethod calls updateTextView in the timer fragment via the runnable in
+    //the mainControllerFragment
     @Override
     public void listenerMethod(String time, String lapTime) {
         mTimerViewFragment.updateTextView(time, lapTime);
